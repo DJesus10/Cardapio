@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - Lanchonete</title>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&family=Montserrat:wght@300;400;700&family=Open+Sans:wght@300;400;700&display=swap">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Fixo (Container da Logo) */
+        header {
+            position: sticky;
+            top: 0;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: transparent; /* Remove qualquer cor de fundo padrão */
+        }
+
+        .logo {
+            max-width: 120px;
+            border-radius: 50%;
+        }
+
+        .info p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        /* Container do Menu */
+        .menu-container {
+            padding: 20px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 15px;
+            margin-top: 20px;
+            background-color: transparent; /* Remove qualquer cor de fundo padrão */
+        }
+
+        .menu-container h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+        }
+
+        .menu-container h2 {
+            font-size: 1.8rem;
+            color: #1e3a8a;
+            margin: 20px 0 10px;
+        }
+
+        #categorias {
+            display: grid;
+            gap: 20px;
+        }
+
+        .produto {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .produto:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .produto img {
+            max-width: 100px;
+            border-radius: 10px;
+        }
+
+        .produto h3 {
+            font-size: 1.4rem;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .produto p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .produto button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #38bdf8, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .produto button:hover {
+            background: linear-gradient(135deg, #1e3a8a, #38bdf8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Carrinho */
+        .carrinho-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #38bdf8, #1e3a8a);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .carrinho-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .carrinho-fixo {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-top-left-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .carrinho-fixo.active {
+            display: block;
+            transform: translateY(0);
+        }
+
+        .carrinho-fixo h3 {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        #itensCarrinho p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .carrinho-fixo p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        .carrinho-fixo input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .cep-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cep-container button {
+            padding: 12px;
+            background: linear-gradient(135deg, #38bdf8, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cep-container button:hover {
+            background: linear-gradient(135deg, #1e3a8a, #38bdf8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .carrinho-fixo button:last-of-type {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #38bdf8, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carrinho-fixo button:last-of-type:hover {
+            background: linear-gradient(135deg, #1e3a8a, #38bdf8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img id="empresaLogo" src="logo.png" alt="Logo Lanchonete" class="logo">
+            <div class="info">
+                <p id="empresaNome"></p>
+                <p id="empresaEndereco"></p>
+                <p id="empresaTelefone"></p>
+                <p id="status">Status: <span id="statusTexto"></span></p>
+            </div>
+        </header>
+
+        <div class="menu-container">
+            <h1>Cardápio</h1>
+            <div id="categorias">
+                <h2>Lanches</h2>
+                <div id="lanches"></div>
+                <h2>Bebidas</h2>
+                <div id="bebidas"></div>
+            </div>
+        </div>
+
+        <div class="carrinho-icon" onclick="toggleCarrinho()"><i class="fas fa-shopping-cart"></i></div>
+        <div class="carrinho-fixo" id="carrinho">
+            <h3>Seu Carrinho</h3>
+            <div id="itensCarrinho"></div>
+            <p>Total: R$ <span id="totalCarrinho">0.00</span></p>
+            <input type="text" id="nomeCliente" placeholder="Seu Nome" required>
+            <div class="cep-container">
+                <input type="text" id="cep" placeholder="CEP" maxlength="9" required>
+                <button onclick="buscarCep()"><i class="fas fa-search"></i></button>
+            </div>
+            <input type="text" id="endereco" placeholder="Endereço" readonly>
+            <input type="text" id="numero" placeholder="Número" required>
+            <button onclick="enviarPedido()"><i class="fas fa-paper-plane"></i> Confirmar Pedido</button>
+        </div>
+    </div>
+
+    <script>
+        // Carregar produtos e informações da empresa do localStorage
+        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+        let empresaInfo = JSON.parse(localStorage.getItem('empresaInfo')) || {};
+        let carrinho = [];
+
+        // Aplicar estilo de fonte e imagens de fundo
+        function aplicarEstilo() {
+            const fonte = empresaInfo.fonte || 'Poppins';
+            const tamanhoFonte = empresaInfo.tamanhoFonte || '16';
+            document.body.style.fontFamily = fonte;
+            document.body.style.fontSize = `${tamanhoFonte}px`;
+
+            // Aplicar imagem de fundo ao header (container da logo)
+            if (empresaInfo.logoContainerBackground) {
+                const header = document.querySelector('header');
+                header.style.backgroundImage = `url(${empresaInfo.logoContainerBackground})`;
+                header.style.backgroundColor = 'transparent'; // Remove qualquer cor de fundo
+                header.style.background = 'none'; // Remove gradientes ou outros estilos de fundo
+            } else {
+                // Fallback caso nenhuma imagem seja definida
+                document.querySelector('header').style.background = 'linear-gradient(135deg, #1e3a8a, #3b82f6)';
+            }
+
+            // Aplicar imagem de fundo ao container do menu
+            if (empresaInfo.menuContainerBackground) {
+                const menuContainer = document.querySelector('.menu-container');
+                menuContainer.style.backgroundImage = `url(${empresaInfo.menuContainerBackground})`;
+                menuContainer.style.backgroundColor = 'transparent'; // Remove qualquer cor de fundo
+                menuContainer.style.background = 'none'; // Remove gradientes ou outros estilos de fundo
+            }
+        }
+
+        // Carregar informações da empresa
+        function carregarEmpresaInfo() {
+            const logo = document.getElementById('empresaLogo');
+            const nome = document.getElementById('empresaNome');
+            const endereco = document.getElementById('empresaEndereco');
+            const telefone = document.getElementById('empresaTelefone');
+
+            logo.src = empresaInfo.empresaLogo || 'logo.png';
+            nome.textContent = empresaInfo.empresaNome || 'Nome da Empresa';
+            endereco.textContent = empresaInfo.empresaEndereco || 'Endereço não informado';
+            telefone.textContent = empresaInfo.empresaTelefone || 'Telefone não informado';
+        }
+
+        // Exibir produtos no cardápio
+        function exibirProdutosCardapio() {
+            const lanches = document.getElementById('lanches');
+            const bebidas = document.getElementById('bebidas');
+            lanches.innerHTML = '';
+            bebidas.innerHTML = '';
+
+            if (produtos.length === 0) {
+                lanches.innerHTML = '<p>Nenhum lanche cadastrado.</p>';
+                bebidas.innerHTML = '<p>Nenhuma bebida cadastrada.</p>';
+                return;
+            }
+
+            produtos.forEach((produto, index) => {
+                const div = `
+                    <div class="produto">
+                        ${produto.imagem ? `<img src="${produto.imagem}" alt="${produto.nome}">` : ''}
+                        <div>
+                            <h3>${produto.nome}</h3>
+                            <p>${produto.descricao}</p>
+                            <p>Preço: R$${produto.preco.toFixed(2)}</p>
+                            <p>Observações: ${produto.observacoes || 'Nenhuma'}</p>
+                            <button onclick="adicionarAoCarrinho(${index})"><i class="fas fa-plus"></i> Adicionar ao Carrinho</button>
+                        </div>
+                    </div>
+                `;
+                if (produto.categoria === 'Lanches') {
+                    lanches.innerHTML += div;
+                } else {
+                    bebidas.innerHTML += div;
+                }
+            });
+        }
+
+        // Status de funcionamento
+        function atualizarStatus() {
+            const horaAtual = new Date().getHours();
+            const statusTexto = document.getElementById('statusTexto');
+            if (horaAtual >= 8 && horaAtual <= 22) {
+                statusTexto.textContent = 'Aberto';
+                statusTexto.style.color = '#34d399';
+            } else {
+                statusTexto.textContent = 'Fechado';
+                statusTexto.style.color = '#ef4444';
+            }
+        }
+
+        // Carrinho: Alternar visibilidade
+        function toggleCarrinho() {
+            const carrinhoDiv = document.getElementById('carrinho');
+            carrinhoDiv.classList.toggle('active');
+        }
+
+        // Carrinho: Adicionar ao carrinho
+        function adicionarAoCarrinho(index) {
+            const produto = produtos[index];
+            const itemExistente = carrinho.find(item => item.nome === produto.nome);
+            if (itemExistente) {
+                itemExistente.quantidade += 1;
+            } else {
+                carrinho.push({ ...produto, quantidade: 1 });
+            }
+            atualizarCarrinho();
+        }
+
+        // Carrinho: Atualizar visualização
+        function atualizarCarrinho() {
+            const itensCarrinho = document.getElementById('itensCarrinho');
+            const totalCarrinho = document.getElementById('totalCarrinho');
+            itensCarrinho.innerHTML = '';
+            let total = 0;
+
+            carrinho.forEach(item => {
+                const subtotal = item.preco * item.quantidade;
+                total += subtotal;
+                itensCarrinho.innerHTML += `
+                    <p>${item.nome} x${item.quantidade} - R$${subtotal.toFixed(2)}</p>
+                `;
+            });
+
+            totalCarrinho.textContent = total.toFixed(2);
+        }
+
+        // Integração com Correios (API ViaCEP para buscar endereço)
+        function buscarCep() {
+            const cepInput = document.getElementById('cep');
+            const cep = cepInput.value.replace(/\D/g, '');
+            const enderecoInput = document.getElementById('endereco');
+
+            if (cep.length !== 8) {
+                alert('Por favor, insira um CEP válido com 8 dígitos.');
+                return;
+            }
+
+            enderecoInput.value = 'Buscando...';
+
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição à API ViaCEP');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.erro) {
+                        enderecoInput.value = '';
+                        alert('CEP não encontrado.');
+                    } else {
+                        enderecoInput.value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+                    }
+                })
+                .catch(error => {
+                    enderecoInput.value = '';
+                    alert('Erro ao buscar o CEP. Verifique sua conexão ou tente novamente mais tarde.');
+                    console.error('Erro:', error);
+                });
+        }
+
+        // Enviar pedido via WhatsApp
+        function enviarPedido() {
+            const nomeCliente = document.getElementById('nomeCliente').value;
+            const cep = document.getElementById('cep').value;
+            const endereco = document.getElementById('endereco').value;
+            const numero = document.getElementById('numero').value;
+            const total = document.getElementById('totalCarrinho').textContent;
+
+            if (!nomeCliente || !cep || !endereco || !numero) {
+                alert('Preencha todos os campos.');
+                return;
+            }
+
+            let mensagem = `Novo Pedido\nCliente: ${nomeCliente}\nEndereço: ${endereco}, ${numero}\nCEP: ${cep}\nItens:\n`;
+            carrinho.forEach(item => {
+                mensagem += `${item.nome} x${item.quantidade} - R$${(item.preco * item.quantidade).toFixed(2)}\n`;
+            });
+            mensagem += `Total: R$${total}`;
+
+            const numeroWhatsApp = "038998094596"; // Substitua pelo número da empresa
+            const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+        }
+
+        // Inicializar
+        aplicarEstilo();
+        carregarEmpresaInfo();
+        exibirProdutosCardapio();
+        atualizarStatus();
+    </script>
+</body>
+</html>

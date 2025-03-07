@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gerenciar Cardápio</title>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&family=Montserrat:wght@300;400;700&family=Open+Sans:wght@300;400;700&display=swap">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-section h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form label {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        form input, form textarea, form select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        form input:focus, form textarea:focus, form select:focus {
+            border-color: #38bdf8;
+            outline: none;
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.3);
+        }
+
+        form button {
+            padding: 12px;
+            background: linear-gradient(135deg, #38bdf8, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        form button:hover {
+            background: linear-gradient(135deg, #1e3a8a, #38bdf8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #resetButton {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+        }
+
+        #resetButton:hover {
+            background: linear-gradient(135deg, #b91c1c, #ef4444);
+        }
+
+        #listaProdutos div {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #listaProdutos button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        #listaProdutos button:first-of-type {
+            background-color: #facc15;
+            color: white;
+        }
+
+        #listaProdutos button:last-of-type {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        #listaProdutos button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #imagemPreview, #logoPreview, #logoContainerBgPreview, #menuContainerBgPreview {
+            max-width: 100px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-section">
+            <!-- Formulário para informações da empresa -->
+            <h1>Configurar Informações da Empresa</h1>
+            <form id="empresaForm">
+                <label for="empresaLogo">Logo da Empresa (Imagem):</label>
+                <input type="file" id="empresaLogo" accept="image/*">
+                <img id="logoPreview" src="" alt="Prévia do Logo" style="max-width: 100px; margin-top: 10px; display: none;">
+                
+                <label for="empresaNome">Nome da Empresa:</label>
+                <input type="text" id="empresaNome" placeholder="Nome da Empresa">
+                
+                <label for="empresaEndereco">Endereço:</label>
+                <input type="text" id="empresaEndereco" placeholder="Endereço da Empresa">
+                
+                <label for="empresaTelefone">Telefone:</label>
+                <input type="text" id="empresaTelefone" placeholder="Telefone da Empresa">
+                
+                <label for="logoContainerBackground">Imagem de Fundo do Container da Logo:</label>
+                <input type="file" id="logoContainerBackground" accept="image/*">
+                <img id="logoContainerBgPreview" src="" alt="Prévia do Fundo do Container da Logo" style="max-width: 100px; margin-top: 10px; display: none;">
+                
+                <label for="menuContainerBackground">Imagem de Fundo do Container do Menu:</label>
+                <input type="file" id="menuContainerBackground" accept="image/*">
+                <img id="menuContainerBgPreview" src="" alt="Prévia do Fundo do Container do Menu" style="max-width: 100px; margin-top: 10px; display: none;">
+                
+                <label for="fonte">Fonte do Site:</label>
+                <select id="fonte">
+                    <option value="Poppins">Poppins</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Open Sans">Open Sans</option>
+                </select>
+                
+                <label for="tamanhoFonte">Tamanho da Fonte Base (px):</label>
+                <input type="number" id="tamanhoFonte" min="12" max="24" value="16">
+                
+                <button type="submit"><i class="fas fa-save"></i> Salvar Informações</button>
+                <button type="button" id="resetButton" onclick="resetarTudo()"><i class="fas fa-trash-alt"></i> Resetar Tudo</button>
+            </form>
+
+            <!-- Formulário para cadastro de produtos -->
+            <h1>Gerenciar Cardápio</h1>
+            <form id="produtoForm">
+                <label for="nome">Nome do Produto:</label>
+                <input type="text" id="nome" required>
+                
+                <label for="categoria">Categoria:</label>
+                <select id="categoria" required>
+                    <option value="Lanches">Lanches</option>
+                    <option value="Bebidas">Bebidas</option>
+                </select>
+                
+                <label for="preco">Preço (R$):</label>
+                <input type="number" step="0.01" id="preco" required>
+                
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" required></textarea>
+                
+                <label for="observacoes">Observações (ex.: adicionar/remover itens):</label>
+                <textarea id="observacoes"></textarea>
+                
+                <label for="imagem">Imagem do Produto:</label>
+                <input type="file" id="imagem" accept="image/*">
+                <img id="imagemPreview" src="" alt="Prévia da Imagem" style="max-width: 100px; margin-top: 10px; display: none;">
+                
+                <button type="submit"><i class="fas fa-plus"></i> Adicionar Produto</button>
+            </form>
+            
+            <h2>Produtos Cadastrados</h2>
+            <div id="listaProdutos"></div>
+        </div>
+    </div>
+
+    <script>
+        // Armazenamento local para produtos e informações da empresa
+        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+        let empresaInfo = JSON.parse(localStorage.getItem('empresaInfo')) || {};
+
+        // Função para salvar produtos no localStorage
+        function salvarProdutos() {
+            console.log('Salvando produtos no localStorage:', produtos);
+            localStorage.setItem('produtos', JSON.stringify(produtos));
+        }
+
+        // Função para salvar informações da empresa no localStorage
+        function salvarEmpresaInfo() {
+            console.log('Salvando informações da empresa no localStorage:', empresaInfo);
+            localStorage.setItem('empresaInfo', JSON.stringify(empresaInfo));
+        }
+
+        // Função para resetar tudo
+        function resetarTudo() {
+            if (confirm('Tem certeza que deseja resetar todas as informações? Isso limpará todos os produtos e configurações.')) {
+                // Limpar localStorage
+                localStorage.removeItem('produtos');
+                localStorage.removeItem('empresaInfo');
+
+                // Resetar variáveis locais
+                produtos = [];
+                empresaInfo = {};
+
+                // Atualizar interface
+                exibirProdutosAdmin();
+                carregarEmpresaInfo();
+                aplicarEstiloFonte();
+
+                alert('Todas as informações foram resetadas com sucesso!');
+            }
+        }
+
+        // Aplicar fonte e tamanho da fonte ao carregar
+        function aplicarEstiloFonte() {
+            const fonte = empresaInfo.fonte || 'Poppins';
+            const tamanhoFonte = empresaInfo.tamanhoFonte || '16';
+            document.body.style.fontFamily = fonte;
+            document.body.style.fontSize = `${tamanhoFonte}px`;
+        }
+
+        // Pré-visualizar imagem do produto
+        document.getElementById('imagem')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('imagemPreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Pré-visualizar logo da empresa
+        document.getElementById('empresaLogo')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('logoPreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Pré-visualizar fundo do container da logo
+        document.getElementById('logoContainerBackground')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('logoContainerBgPreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Pré-visualizar fundo do container do menu
+        document.getElementById('menuContainerBackground')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('menuContainerBgPreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Adicionar produto
+        document.getElementById('produtoForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const categoria = document.getElementById('categoria').value;
+            const preco = parseFloat(document.getElementById('preco').value);
+            const descricao = document.getElementById('descricao').value;
+            const observacoes = document.getElementById('observacoes').value;
+            const imagemInput = document.getElementById('imagem');
+            let imagem = '';
+
+            if (imagemInput.files && imagemInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagem = event.target.result;
+                    const produto = { nome, categoria, preco, descricao, observacoes, imagem };
+                    produtos.push(produto);
+                    salvarProdutos();
+                    exibirProdutosAdmin();
+                    document.getElementById('produtoForm').reset();
+                    document.getElementById('imagemPreview').style.display = 'none';
+                    window.location.href = 'cardapio.html';
+                };
+                reader.readAsDataURL(imagemInput.files[0]);
+            } else {
+                const produto = { nome, categoria, preco, descricao, observacoes, imagem };
+                produtos.push(produto);
+                salvarProdutos();
+                exibirProdutosAdmin();
+                document.getElementById('produtoForm').reset();
+                document.getElementById('imagemPreview').style.display = 'none';
+                window.location.href = 'cardapio.html';
+            }
+        });
+
+        // Salvar informações da empresa
+        document.getElementById('empresaForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const empresaNome = document.getElementById('empresaNome').value;
+            const empresaEndereco = document.getElementById('empresaEndereco').value;
+            const empresaTelefone = document.getElementById('empresaTelefone').value;
+            const empresaLogoInput = document.getElementById('empresaLogo');
+            const logoContainerBgInput = document.getElementById('logoContainerBackground');
+            const menuContainerBgInput = document.getElementById('menuContainerBackground');
+            const fonte = document.getElementById('fonte').value;
+            const tamanhoFonte = document.getElementById('tamanhoFonte').value;
+
+            let empresaLogo = empresaInfo.empresaLogo || '';
+            let logoContainerBackground = empresaInfo.logoContainerBackground || '';
+            let menuContainerBackground = empresaInfo.menuContainerBackground || '';
+
+            const salvarInfo = () => {
+                empresaInfo = {
+                    empresaNome,
+                    empresaEndereco,
+                    empresaTelefone,
+                    empresaLogo,
+                    logoContainerBackground,
+                    menuContainerBackground,
+                    fonte,
+                    tamanhoFonte
+                };
+                salvarEmpresaInfo();
+                aplicarEstiloFonte();
+                alert('Informações da empresa salvas com sucesso!');
+            };
+
+            const readFiles = [];
+            if (empresaLogoInput.files && empresaLogoInput.files[0]) {
+                readFiles.push(new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        empresaLogo = event.target.result;
+                        resolve();
+                    };
+                    reader.readAsDataURL(empresaLogoInput.files[0]);
+                }));
+            }
+            if (logoContainerBgInput.files && logoContainerBgInput.files[0]) {
+                readFiles.push(new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        logoContainerBackground = event.target.result;
+                        resolve();
+                    };
+                    reader.readAsDataURL(logoContainerBgInput.files[0]);
+                }));
+            }
+            if (menuContainerBgInput.files && menuContainerBgInput.files[0]) {
+                readFiles.push(new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        menuContainerBackground = event.target.result;
+                        resolve();
+                    };
+                    reader.readAsDataURL(menuContainerBgInput.files[0]);
+                }));
+            }
+
+            Promise.all(readFiles).then(salvarInfo);
+        });
+
+        // Exibir produtos no admin
+        function exibirProdutosAdmin() {
+            const lista = document.getElementById('listaProdutos');
+            lista.innerHTML = '';
+            produtos.forEach((produto, index) => {
+                lista.innerHTML += `
+                    <div>
+                        <p>${produto.nome} (${produto.categoria}) - R$${produto.preco.toFixed(2)}</p>
+                        <div>
+                            ${produto.imagem ? `<img src="${produto.imagem}" alt="${produto.nome}" style="max-width: 50px; margin-right: 10px;">` : ''}
+                            <button onclick="editarProduto(${index})">Editar</button>
+                            <button onclick="removerProduto(${index})">Remover</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Editar produto
+        function editarProduto(index) {
+            const produto = produtos[index];
+            document.getElementById('nome').value = produto.nome;
+            document.getElementById('categoria').value = produto.categoria;
+            document.getElementById('preco').value = produto.preco;
+            document.getElementById('descricao').value = produto.descricao;
+            document.getElementById('observacoes').value = produto.observacoes;
+            if (produto.imagem) {
+                const preview = document.getElementById('imagemPreview');
+                preview.src = produto.imagem;
+                preview.style.display = 'block';
+            }
+            produtos.splice(index, 1);
+            salvarProdutos();
+            exibirProdutosAdmin();
+        }
+
+        // Remover produto
+        function removerProduto(index) {
+            produtos.splice(index, 1);
+            salvarProdutos();
+            exibirProdutosAdmin();
+        }
+
+        // Carregar informações da empresa ao iniciar
+        function carregarEmpresaInfo() {
+            if (empresaInfo.empresaNome) document.getElementById('empresaNome').value = empresaInfo.empresaNome;
+            if (empresaInfo.empresaEndereco) document.getElementById('empresaEndereco').value = empresaInfo.empresaEndereco;
+            if (empresaInfo.empresaTelefone) document.getElementById('empresaTelefone').value = empresaInfo.empresaTelefone;
+            if (empresaInfo.empresaLogo) {
+                const preview = document.getElementById('logoPreview');
+                preview.src = empresaInfo.empresaLogo;
+                preview.style.display = 'block';
+            }
+            if (empresaInfo.logoContainerBackground) {
+                const preview = document.getElementById('logoContainerBgPreview');
+                preview.src = empresaInfo.logoContainerBackground;
+                preview.style.display = 'block';
+            }
+            if (empresaInfo.menuContainerBackground) {
+                const preview = document.getElementById('menuContainerBgPreview');
+                preview.src = empresaInfo.menuContainerBackground;
+                preview.style.display = 'block';
+            }
+            if (empresaInfo.fonte) document.getElementById('fonte').value = empresaInfo.fonte;
+            if (empresaInfo.tamanhoFonte) document.getElementById('tamanhoFonte').value = empresaInfo.tamanhoFonte;
+        }
+
+        // Inicializar
+        exibirProdutosAdmin();
+        carregarEmpresaInfo();
+        aplicarEstiloFonte();
+    </script>
+</body>
+</html>
